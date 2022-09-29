@@ -8,7 +8,7 @@ export interface PathMethod {
   operation: OpenAPIV3.OperationObject;
 }
 
-export interface ApiDocument {
+export interface ApiDocument extends Record<string, unknown> {
   document: OpenAPIV3.Document;
   pathMethods: PathMethod[];
   references: References;

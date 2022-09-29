@@ -25,3 +25,13 @@ openapi-to-md -s openapi.yaml README.md
 openapi-to-md openapi.yaml README.md
 openapi-to-md openapi.json > README.md
 ```
+
+## TODO
+
+> This is project convert openapi to readme
+
+- infra: read / save / upload 
+- interface: cli
+- application: what kind layout and order we want (provide interface)
+- domain: json-schema > json > markdown (DDD part) (provide interface)
+

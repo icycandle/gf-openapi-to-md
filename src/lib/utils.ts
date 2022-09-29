@@ -1,6 +1,6 @@
 import YAML from "yaml";
 import { OpenAPIV3 } from "openapi-types";
-import { ApiDocument, PathMethod, References } from "../type";
+import { ApiDocument } from "../type";
 
 export function readDocument<T>(src: string): T | null {
   try {
@@ -12,50 +12,12 @@ export function readDocument<T>(src: string): T | null {
   return null;
 }
 
-export function createApiDocument(document: OpenAPIV3.Document): ApiDocument {
-  const pathMethods: PathMethod[] = [];
-  for (const [path, pathItem] of Object.entries<
-    OpenAPIV3.PathItemObject | undefined
-  >(document.paths)) {
-    if (!pathItem) continue;
-    for (const [method, operation] of Object.entries(pathItem)) {
-      if (method === "parameters") continue;
-      pathMethods.push({
-        path,
-        method: method.toUpperCase(),
-        operation: operation as OpenAPIV3.OperationObject,
-      });
-    }
-  }
-  const references: References = {};
-  if ("components" in document && document.components) {
-    const { components } = document;
-    Object.entries(components).forEach(([key, value]) => {
-      Object.entries(value).forEach(([key2, value]) => {
-        references[`#/components/${key}/${key2}`] = value;
-      });
-    });
-  }
-  return { document, pathMethods, references };
-}
-
-export function convertPath(path: string) {
-  return path
-    .replace(/[!@#$%^&*()+|~=`[\]{};':",./<>?]/g, "")
-    .replace(/ /g, "-")
-    .toLowerCase();
-}
-
 export function getRefName(refObject: unknown | OpenAPIV3.ReferenceObject) {
   if (typeof refObject === "object" && refObject && "$ref" in refObject) {
     return (refObject as OpenAPIV3.ReferenceObject)["$ref"];
   }
   return undefined;
 }
-
-export const SP = (size: number) => "".padEnd(size * 2);
-
-export const markdownText = (text: string) => text.replace(/\n/g, "  \n");
 
 export function getApiObject<T = unknown | OpenAPIV3.ReferenceObject>(
   { references }: ApiDocument,
@@ -76,3 +38,10 @@ export function getApiObject<T = unknown | OpenAPIV3.ReferenceObject>(
   return object as T;
 }
 
+export function downGradeMarkdownTitle(text: string) {
+  return text.replace(/(^#|\n\s*#)/g, "\n##");
+}
+
+export function toMarkdownJsonCode(data: unknown) {
+  return "```json\n" + JSON.stringify(data, null, 2) + "\n```";
+}

@@ -1,3 +1,6 @@
 /node_modules
 /dist
 /test
+
+openapi.json
+openapi.md

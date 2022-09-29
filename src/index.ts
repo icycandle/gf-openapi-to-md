@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 import { program } from "commander";
-import { convertMarkdown } from "./lib/convert-markdown";
+import { TOKENS } from "./lib/token";
+import { container } from "./lib/container";
 
 program
   .version(process.env.npm_package_version || "unknown")
-  .option("-s, --sort", "sort", false)
   .arguments("<source> [destination]")
-  .action((src, dest, options) => {
-    convertMarkdown(src, dest);
+  .action((src, dest) => {
+    const convertMarkdown = container.get(TOKENS.convertMarkdown);
+    convertMarkdown.readAndWrite(src, dest);
   });
 program.parse(process.argv);
