@@ -69,9 +69,9 @@ export class OutputPathDetail implements IOutputHelper {
       .join("\n\n");
 
     const server = operation.servers
-      ? operation.servers[0]
+      ? operation.servers[0].url
       : apiDocument.document.servers
-      ? apiDocument.document.servers[0]
+      ? apiDocument.document.servers[0].url
       : "";
 
     const exampleJson =
@@ -88,8 +88,8 @@ export class OutputPathDetail implements IOutputHelper {
       ? [
           "# curl Example",
           "```bash",
-          `curl -X ${method} ${server}/${path}`,
-          `     -H 'Content-Type: ${contentType}'`,
+          `curl -X ${method} ${server}${path} \\`,
+          `     -H 'Content-Type: ${contentType}' \\`,
           `     -d '${JSON.stringify(exampleJson)}'`,
           "```",
         ].join("\n")

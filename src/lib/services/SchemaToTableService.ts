@@ -84,21 +84,6 @@ export class SchemaToTableService implements ISchemaToTableService {
     obj: OpenAPIV3.SchemaObject,
     columns: ESchemaTableColumn[]
   ): string {
-    // const contentType = Object.keys(obj.content)[0];
-    //
-    // const schemaObj = obj.content[contentType].schema;
-    //
-    // if (!schemaObj) {
-    //   throw Error("Assume schema is exist");
-    // }
-    //
-    // if (!("$ref" in schemaObj)) {
-    //   throw Error("Array type is not defined");
-    // }
-    //
-    // const schemaRefPath = schemaObj.$ref;
-    // const schemaData = this.apiDocumentService.get().references[schemaRefPath];
-
     if (obj.type != "object") {
       throw Error("Only Support Single Model Schema for now.");
     }

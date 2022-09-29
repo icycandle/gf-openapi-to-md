@@ -1,6 +1,6 @@
 
 default:
-  yarn build && ./dist/index.js openapi.json > openapi.md && cat openapi.md
+  yarn build && ./dist/index.js openapi.json > openapi.md && bat openapi.md
 
 md:
   yarn build && ./dist/index.js openapi.json > openapi.md
