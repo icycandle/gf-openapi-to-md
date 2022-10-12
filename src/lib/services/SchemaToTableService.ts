@@ -68,6 +68,11 @@ export class SchemaToTableService implements ISchemaToTableService {
         typeCellValue = this.refService.refLink(refObj.$ref);
       }
 
+      const example =
+        typeof property.example === "object"
+          ? "`" + JSON.stringify(property.example) + "`"
+          : property.example;
+
       return {
         place: "Body",
         field: key,
@@ -75,7 +80,7 @@ export class SchemaToTableService implements ISchemaToTableService {
         title: property.title,
         type: typeCellValue,
         description,
-        example: property.example ?? "",
+        example: example ?? "",
       } as TTableBodyRowData;
     });
   }

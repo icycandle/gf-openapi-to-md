@@ -104,12 +104,15 @@ export class OutputPathDetail implements IOutputHelper {
     ].join("\n\n");
   }
 
+
   public output(): string {
     const apiDocument = this.apiDocumentService.get();
     const { pathMethods } = apiDocument;
-    const apiDocList = pathMethods.map((pathMethod) =>
-      downGradeMarkdownTitle(this.pathDetailDoc(pathMethod))
-    );
+    const apiDocList = pathMethods
+      .filter((pathMethod) => pathMethod.path.includes("certify"))
+      .map((pathMethod) =>
+        downGradeMarkdownTitle(this.pathDetailDoc(pathMethod))
+      );
     return ["# APIs", ...apiDocList].join("\n\n");
   }
 }

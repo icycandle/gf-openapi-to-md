@@ -2,10 +2,11 @@ import { OpenAPIV3 } from "openapi-types";
 import {
   ESchemaTableColumn,
   ISchemaToTableService,
-} from "../services/SchemaToTableService";
+} from "../../services/SchemaToTableService";
 import { injected } from "brandi";
-import { TOKENS } from "../token";
-import { IApiDocumentService } from "../services/ApiDocumentService";
+import { TOKENS } from "../../token";
+import { IApiDocumentService } from "../../services/ApiDocumentService";
+import { ITableInfoHelper, tableInfoHelperFactory } from "./TableInfoHelper";
 
 export const columns: ESchemaTableColumn[] = [
   "place",
@@ -19,9 +20,11 @@ export const columns: ESchemaTableColumn[] = [
 
 export interface IRequestBodyToMarkdown {
   result(obj: OpenAPIV3.RequestBodyObject): string;
+
   getSchemaObj(obj: OpenAPIV3.RequestBodyObject): OpenAPIV3.SchemaObject;
 }
 
+// main
 export class RequestBodyToMarkdown implements IRequestBodyToMarkdown {
   constructor(
     private apiDocumentService: IApiDocumentService,
@@ -39,11 +42,9 @@ export class RequestBodyToMarkdown implements IRequestBodyToMarkdown {
       throw Error("Assume schema is exist");
     }
 
-    if (!("$ref" in schemaObj)) {
-      throw Error("Array type is not defined");
-    }
+    const tableInfoHelper: ITableInfoHelper = tableInfoHelperFactory(schemaObj);
 
-    const schemaRefPath = schemaObj.$ref;
+    const schemaRefPath = tableInfoHelper.getRefPath();
     const apiDocument = this.apiDocumentService.get();
     return apiDocument.references[schemaRefPath] as OpenAPIV3.SchemaObject;
   }
@@ -58,6 +59,7 @@ export class RequestBodyToMarkdown implements IRequestBodyToMarkdown {
     return `\n\n ${tableMarkdown} \n\n`;
   }
 }
+
 injected(
   RequestBodyToMarkdown,
   TOKENS.apiDocumentService,
